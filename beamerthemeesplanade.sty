@@ -235,35 +235,39 @@
 %  \vfill
 }
 
-% Patching the part command
+% Part overrides — split by concern.
+% Save original \part before any patching so that the wrappers below can
+% delegate back to it without re-triggering any of the hooks.
 \let\origpart\part
+
+% Initialise the plain-text part title (used by section-page frametitle).
+% \parttitle stores the short-title text without Beamer's hyperlink wrapper.
+% https://tex.stackexchange.com/a/13392
 \newcommand{\parttitle}{}
-\renewcommand*{\part}[2][]{%
-	% Reset section numbering for each part
-	% https://tex.stackexchange.com/a/65661
-	% TODO: This should not use \AtBeginPart
-	%\makeatletter
-	%\AtBeginPart{
-	  \beamer@tocsectionnumber=0\relax
-	  \setcounter{section}{0}
-	%}
-	%\makeatother
 
-	% Store the part title in \parttitle
-	% In contrast to \insertpart this does not include a hyperlink to the part
-	% https://tex.stackexchange.com/a/13392
-   \ifx\\#1\\% optional argument not present?
-      \renewcommand*\parttitle{#2}%
-   \else
-      \renewcommand*\parttitle{#1}%
-   \fi
+% Flag: true if \part was called at least once in this document.
+% Used to suppress part numbers on section pages in part-free decks.
+% Defines \esplanade@ifparts{<true>}{<false>} for use in templates.
+\ExplSyntaxOn
+\bool_new:N \g_espl_parts_used_bool
+\AddToHook{cmd/part/before}{\bool_gset_true:N \g_espl_parts_used_bool}
+\NewDocumentCommand{\esplanade@ifparts}{mm}{%
+  \bool_if:NTF \g_espl_parts_used_bool {#1} {#2}%
+}
+\ExplSyntaxOff
 
-   % Calling the original part command
-   \ifx\\#1\\% optional argument not present?
-      \origpart{#2}%
-   \else
-      \origpart[#1]{#2}%
-   \fi
+% Reset section numbering at the start of each new part.
+% https://tex.stackexchange.com/a/65661
+\AddToHook{cmd/part/before}{%
+  \beamer@tocsectionnumber=0\relax
+  \setcounter{section}{0}%
+}
+
+% Store the plain-text part title on each \part call.
+\RenewDocumentCommand{\part}{o m}{%
+  \IfNoValueTF{#1}%
+    {\renewcommand*\parttitle{#2}\origpart{#2}}%
+    {\renewcommand*\parttitle{#1}\origpart[#1]{#2}}%
 }
 
 % Patch the partpage command to ensure it is in plain format when used outside a frame
@@ -291,7 +295,7 @@
 % Section Pages showing TOC for this part
 \setbeamertemplate{section page}{%
   % TODO: There should be a switch to remove the hideallsubsections
-  \frametitle{Overview: \insertpartnumber.~\parttitle}
+  \frametitle{Overview\esplanade@ifparts{: \insertpartnumber.~\parttitle}{}}
   \ifnum\value{section}<2
   \tableofcontents[hideallsubsections]
   \else
@@ -300,10 +304,7 @@
 }
 
 % Make sections numbered in TOC
-\setbeamertemplate{section in toc}[sections numbered]
-%\makeatletter
-\setbeamertemplate{section in toc}{\insertpartnumber.\inserttocsectionnumber.~\inserttocsection\par}
-%\makeatother
+\setbeamertemplate{section in toc}{\esplanade@ifparts{\insertpartnumber.}{}\inserttocsectionnumber.~\inserttocsection\par}
 
 
 \setbeamertemplate{background}{%
