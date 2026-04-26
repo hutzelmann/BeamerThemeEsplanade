@@ -31,6 +31,7 @@
 
 \usepackage{expl3}
 \ExplSyntaxOn
+\bool_new:N \l__esplanade_noitalictitles_bool
 \DeclareOptionBeamer{faculty}[generic]{%
    \str_case:nnF {#1}
       {
@@ -67,6 +68,7 @@
       }
 }
 \ExecuteOptionsBeamer{institute=none}
+\DeclareOptionBeamer{noitalictitles}{\bool_set_true:N \l__esplanade_noitalictitles_bool}
 \ProcessOptionsBeamer
 \ExplSyntaxOff
 
@@ -165,9 +167,13 @@
 % TODO: Add comments about what node does what
 
 
-% Make frame title italic
-\setbeamerfont{frametitle}{series=\itshape}
-\setbeamerfont{framesubtitle}{series=\itshape}
+% Make frame title italic (unless noitalictitles option was given)
+\ExplSyntaxOn
+\bool_if:NF \l__esplanade_noitalictitles_bool {
+   \setbeamerfont{frametitle}{series=\itshape}
+   \setbeamerfont{framesubtitle}{series=\itshape}
+}
+\ExplSyntaxOff
 
 % Make math look like latex math
 \usefonttheme[onlymath]{serif}

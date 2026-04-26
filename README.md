@@ -1,6 +1,6 @@
 # LaTeX Beamer Theme Esplanade
 
-An unofficial LaTeX Beamer theme that follows the [design manual](https://mythi.de/index.php?kc=20&pid=pov&mfid=167&otree=1) of [Technische Hochschule Ingolstadt](https://www.thi.de/).
+A LaTeX Beamer theme that follows the [design manual](https://mythi.de/index.php?kc=20&pid=pov&mfid=167&otree=1) of [Technische Hochschule Ingolstadt](https://www.thi.de/).
 It keeps changes to the standard Beamer layout to a minimum, so you can drop it into any existing presentation without touching your slides.
 It is not a pixel-perfect copy of the [PowerPoint templates](https://mythi.de/index.php?kc=20&pid=pov&mfid=189&otree=1), but brings the same design language to LaTeX Beamer.
 
@@ -61,6 +61,15 @@ Where `<INSTITUTE>` is one of the following (case-sensitive):
 - `car`: CARISSMA
 - `aim`: AImotion Bavaria
 
+#### Italic frame titles
+
+By default, frame titles and subtitles are rendered in italic, following the official design manual.
+To use the upright font instead, pass the `noitalictitles` option:
+
+```latex
+\usetheme[noitalictitles]{esplanade}
+```
+
 #### Combining options
 
 You can combine all options in a single `\usetheme` command, e.g.
@@ -75,7 +84,7 @@ for the computer science faculty color scheme with the CARISSMA institute logo.
 
 #### Beamer Package Options
 
-All standard beamer options are supported, e.g. different font sizes (10pt, 11pt, 12pt), aspect ratios (169, 43), and the `t` option for top-alignment.
+All standard beamer options are supported, e.g. different font sizes (`10pt`, `11pt`, `12pt`), aspect ratios (`169`, `43`), and the `t` option for top-alignment.
 
 ```latex
 \documentclass[12pt,aspectratio=169,t]{beamer}
