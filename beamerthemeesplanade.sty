@@ -1,0 +1,318 @@
+% Beamer Theme Esplanade
+% Version: 0.0.1
+%
+% Based on the templates for PowerPoint from MyTHI
+% https://mythi.de/index.php?kc=20&pid=pov&mfid=189&otree=1
+
+% TODO: Hide colors when printing, e.g. https://ctan.org/pkg/ocgx2
+
+% TODO: Proper setup for continuing pages and set it up for sectionpages
+
+\usepackage{tikz}
+\usepgflibrary{shadings}
+\usetikzlibrary{positioning}
+
+
+% Information for the beamer package
+\institute{Technische Hochschule Ingolstadt}
+
+% Initialize colors
+\definecolor{THIblau}{HTML}{005A9B}
+\definecolor{THIinfo}{HTML}{D7D700}
+\definecolor{THIwing}{HTML}{F08200}
+\definecolor{THIzaf}{HTML}{007382}
+\definecolor{THIelin}{HTML}{96BE00}
+\definecolor{THIbusi}{HTML}{E6320F}
+\definecolor{THIiaw}{HTML}{009BCD}
+\definecolor{THImach}{HTML}{009664}
+\definecolor{THIninf}{HTML}{871932}
+
+% Option parsing logic
+
+\usepackage{expl3}
+\ExplSyntaxOn
+\DeclareOptionBeamer{faculty}[generic]{%
+   \str_case:nnF {#1}
+      {
+         {generic} {\colorlet{THIfaculty}{THIblau}}
+         {b}   {\colorlet{THIfaculty}{THIbusi}}
+         {e}   {\colorlet{THIfaculty}{THIelin}}
+         {i}   {\colorlet{THIfaculty}{THIinfo}}
+         {iaw} {\colorlet{THIfaculty}{THIiaw}}
+         {m}   {\colorlet{THIfaculty}{THImach}}
+         {ni}  {\colorlet{THIfaculty}{THIninf}}
+         {tcw} {\colorlet{THIfaculty}{THIiaw}}
+         {w}   {\colorlet{THIfaculty}{THIwing}}
+         {zaf} {\colorlet{THIfaculty}{THIzaf}}
+      }
+      {
+         \msg_new:nnn {beamerthemeesplanade} {unknown-faculty}
+            { Unknown~faculty~option~'#1';~using~generic~color. }
+         \msg_warning:nnn {beamerthemeesplanade} {unknown-faculty} {#1}
+         \colorlet{THIfaculty}{THIblau}
+      }
+}
+\ExecuteOptionsBeamer{faculty=generic}
+\DeclareOptionBeamer{institute}[none]{%
+   \str_case:nnF {#1}
+      {
+         {none} {}
+         {car}  {}
+         {aim}  {}
+      }
+      {
+         \msg_new:nnn {beamerthemeesplanade} {unknown-institute}
+            { Unknown~institute~option~'#1';~using~generic~logos. }
+         \msg_warning:nnn {beamerthemeesplanade} {unknown-institute} {#1}
+      }
+}
+\ExecuteOptionsBeamer{institute=none}
+\ProcessOptionsBeamer
+\ExplSyntaxOff
+
+
+% TODO: Make logo replacable with the included beamer command \logo (or whatever it is)
+
+% The THI logo as tikz picture to avoid the inclusion of a pdf
+% TODO: Use xsavebox instead for smaller pdfs
+\newsavebox\THILogo
+\sbox\THILogo{\begin{tikzpicture}[y=1cm, x=1cm, inner sep=0pt, outer sep=0pt]
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1] (3.6354, 3.9778) -- (3.1998, 3.9778) -- (3.2868, 4.3052).. controls (3.2968, 4.3418) and (3.275, 4.38) .. (3.2383, 4.3901) -- (3.1711, 4.4081).. controls (3.1342, 4.418) and (3.0969, 4.3962) .. (3.0867, 4.3593) -- (2.9853, 3.9778) -- (2.6446, 3.9778).. controls (2.6069, 3.9779) and (2.5669, 3.9455) .. (2.5566, 3.9078) -- (2.5383, 3.8392).. controls (2.5281, 3.8014) and (2.5503, 3.7706) .. (2.588, 3.7705) -- (2.9297, 3.7705) -- (2.8414, 3.4429).. controls (2.8315, 3.4064) and (2.8547, 3.3678) .. (2.8911, 3.3579) -- (2.9574, 3.3402).. controls (2.9938, 3.3303) and (3.0312, 3.3518) .. (3.0413, 3.3883) -- (3.1443, 3.7705) -- (3.6354, 3.7705).. controls (3.7025, 3.7705) and (3.7568, 3.7162) .. (3.7568, 3.6492).. controls (3.7568, 3.641) and (3.7545, 3.6273) .. (3.7535, 3.6216) -- (3.5932, 3.0273).. controls (3.5833, 2.9909) and (3.6065, 2.9523) .. (3.6429, 2.9425) -- (3.7092, 2.9247).. controls (3.7456, 2.9149) and (3.783, 2.9363) .. (3.793, 2.9727) -- (3.953, 3.5629) -- (3.9528, 3.5632).. controls (3.9603, 3.5906) and (3.9643, 3.6193) .. (3.9643, 3.6491).. controls (3.9643, 3.8307) and (3.817, 3.9778) .. (3.6354, 3.9778);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1] (4.0134, 4.1978).. controls (3.9487, 4.2151) and (3.8822, 4.1767) .. (3.8649, 4.1119).. controls (3.8475, 4.0472) and (3.8859, 3.9806) .. (3.9507, 3.9633).. controls (4.0154, 3.9459) and (4.082, 3.9844) .. (4.0993, 4.0491).. controls (4.1167, 4.1138) and (4.0782, 4.1804) .. (4.0134, 4.1978);
+\end{tikzpicture}}
+
+% Same as with the logo, but this time with text below
+% TODO: Use xsavebox instead for smaller pdfs
+% TODO: Change order of shapes to match the flow of text
+\newsavebox\THILogoWithText
+\sbox\THILogoWithText{\begin{tikzpicture}[y=1cm, x=1cm, inner sep=0pt, outer sep=0pt]
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (4.0081, 1.9037) -- (4.0081, 2.1604) -- (3.8257, 2.1604) -- (3.8257, 1.9037) -- (3.7491, 1.9037) -- (3.7491, 2.4667) -- (3.8257, 2.4667) -- (3.8257, 2.237) -- (4.0081, 2.237) -- (4.0081, 2.4667) -- (4.0855, 2.4667) -- (4.0855, 1.9037) -- (4.0081, 1.9037);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (4.4228, 2.173).. controls (4.4228, 2.2077) and (4.4062, 2.2504) .. (4.3414, 2.2504).. controls (4.2902, 2.2504) and (4.2594, 2.222) .. (4.2594, 2.173) -- (4.2594, 2.0481).. controls (4.2594, 2.0126) and (4.2759, 1.9707) .. (4.3414, 1.9707).. controls (4.392, 1.9707) and (4.4228, 2.0) .. (4.4228, 2.0481) -- cycle(4.3414, 1.8958).. controls (4.2467, 1.8958) and (4.1843, 1.9549) .. (4.1843, 2.0481) -- (4.1843, 2.173).. controls (4.1843, 2.2646) and (4.2483, 2.3238) .. (4.3414, 2.3238).. controls (4.4355, 2.3238) and (4.4986, 2.2661) .. (4.4986, 2.173) -- (4.4986, 2.0481).. controls (4.4986, 1.9566) and (4.4338, 1.8958) .. (4.3414, 1.8958);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (4.9039, 2.1808) -- (4.8273, 2.1808).. controls (4.821, 2.2156) and (4.8004, 2.2504) .. (4.7483, 2.2504).. controls (4.697, 2.2504) and (4.6662, 2.222) .. (4.6662, 2.173) -- (4.6662, 2.0481).. controls (4.6662, 2.0126) and (4.6827, 1.9707) .. (4.7483, 1.9707).. controls (4.7909, 1.9707) and (4.8193, 1.996) .. (4.8265, 2.0395) -- (4.9039, 2.0395).. controls (4.8928, 1.9503) and (4.8336, 1.8958) .. (4.7483, 1.8958).. controls (4.6536, 1.8958) and (4.5911, 1.9549) .. (4.5911, 2.0481) -- (4.5911, 2.173).. controls (4.5911, 2.2646) and (4.6551, 2.3238) .. (4.7483, 2.3238).. controls (4.8344, 2.3238) and (4.8937, 2.2701) .. (4.9039, 2.1808);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (5.2275, 1.9037) -- (5.2275, 2.173).. controls (5.2275, 2.2077) and (5.2196, 2.2504) .. (5.1548, 2.2504).. controls (5.1074, 2.2504) and (5.0679, 2.2196) .. (5.0679, 2.1745) -- (5.0679, 1.9037) -- (4.993, 1.9037) -- (4.993, 2.4667) -- (5.0679, 2.4667) -- (5.0679, 2.2945).. controls (5.0908, 2.3143) and (5.1256, 2.3238) .. (5.1548, 2.3238).. controls (5.252, 2.3238) and (5.3017, 2.2669) .. (5.3017, 2.173) -- (5.3017, 1.9037) -- (5.2275, 1.9037);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (5.5449, 1.8974).. controls (5.4571, 1.8974) and (5.394, 1.9503) .. (5.3892, 2.0395) -- (5.4643, 2.0395).. controls (5.469, 1.9945) and (5.499, 1.9724) .. (5.5449, 1.9724).. controls (5.5843, 1.9724) and (5.6269, 1.9818) .. (5.6269, 2.0299).. controls (5.6269, 2.0498) and (5.6104, 2.0639) .. (5.5867, 2.0711).. controls (5.5527, 2.0821) and (5.5204, 2.0884) .. (5.4872, 2.0971).. controls (5.435, 2.1106) and (5.3955, 2.1453) .. (5.3955, 2.1999).. controls (5.3955, 2.289) and (5.4651, 2.323) .. (5.5425, 2.323).. controls (5.6261, 2.323) and (5.6878, 2.2756) .. (5.6957, 2.1904) -- (5.6191, 2.1904).. controls (5.6128, 2.2282) and (5.5875, 2.2496) .. (5.5409, 2.2496).. controls (5.5061, 2.2496) and (5.4698, 2.2401) .. (5.4698, 2.1999).. controls (5.4698, 2.1841) and (5.4833, 2.1706) .. (5.507, 2.1643).. controls (5.5378, 2.1555) and (5.5796, 2.1469) .. (5.6128, 2.1359).. controls (5.6609, 2.1201) and (5.7012, 2.0861) .. (5.7012, 2.0299).. controls (5.7012, 1.9329) and (5.6285, 1.8974) .. (5.5449, 1.8974);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (6.0991, 2.1808) -- (6.0225, 2.1808).. controls (6.0162, 2.2156) and (5.9956, 2.2504) .. (5.9435, 2.2504).. controls (5.8921, 2.2504) and (5.8613, 2.222) .. (5.8613, 2.173) -- (5.8613, 2.0481).. controls (5.8613, 2.0126) and (5.878, 1.9707) .. (5.9435, 1.9707).. controls (5.9862, 1.9707) and (6.0146, 1.996) .. (6.0218, 2.0395) -- (6.0991, 2.0395).. controls (6.088, 1.9503) and (6.0289, 1.8958) .. (5.9435, 1.8958).. controls (5.8487, 1.8958) and (5.7863, 1.9549) .. (5.7863, 2.0481) -- (5.7863, 2.173).. controls (5.7863, 2.2646) and (5.8503, 2.3238) .. (5.9435, 2.3238).. controls (6.0296, 2.3238) and (6.0888, 2.2701) .. (6.0991, 2.1808);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (6.4227, 1.9037) -- (6.4227, 2.173).. controls (6.4227, 2.2077) and (6.4148, 2.2504) .. (6.35, 2.2504).. controls (6.3027, 2.2504) and (6.2632, 2.2196) .. (6.2632, 2.1745) -- (6.2632, 1.9037) -- (6.1882, 1.9037) -- (6.1882, 2.4667) -- (6.2632, 2.4667) -- (6.2632, 2.2945).. controls (6.286, 2.3143) and (6.3208, 2.3238) .. (6.35, 2.3238).. controls (6.4472, 2.3238) and (6.497, 2.2669) .. (6.497, 2.173) -- (6.497, 1.9037) -- (6.4227, 1.9037);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (6.8341, 1.9037) -- (6.8341, 1.9305).. controls (6.8191, 1.9139) and (6.786, 1.8965) .. (6.7536, 1.8965).. controls (6.6588, 1.8965) and (6.5988, 1.9557) .. (6.5988, 2.0481) -- (6.5988, 2.3182) -- (6.6738, 2.3182) -- (6.6738, 2.0481).. controls (6.6738, 2.0126) and (6.688, 1.9715) .. (6.7536, 1.9715).. controls (6.8009, 1.9715) and (6.8341, 1.9992) .. (6.8341, 2.0442) -- (6.8341, 2.3182) -- (6.91, 2.3182) -- (6.91, 1.9037) -- (6.8341, 1.9037);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (7.0162, 2.4667) -- (7.0913, 2.4667) -- (7.0913, 2.0119).. controls (7.0913, 1.9858) and (7.1062, 1.9779) .. (7.1236, 1.9779) -- (7.1512, 1.9779) -- (7.1512, 1.9037) -- (7.1197, 1.9037).. controls (7.0628, 1.9037) and (7.0162, 1.9353) .. (7.0162, 2.015) -- (7.0162, 2.4667);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (7.4576, 2.173).. controls (7.4576, 2.2077) and (7.441, 2.2504) .. (7.3763, 2.2504).. controls (7.3249, 2.2504) and (7.2941, 2.222) .. (7.2941, 2.173) -- (7.2941, 2.158) -- (7.4576, 2.158) -- cycle(7.5335, 2.0837) -- (7.2941, 2.0837) -- (7.2941, 2.0481).. controls (7.2941, 2.0126) and (7.3108, 1.9707) .. (7.3763, 1.9707).. controls (7.419, 1.9707) and (7.4474, 1.996) .. (7.4544, 2.0395) -- (7.5318, 2.0395).. controls (7.5208, 1.9503) and (7.4616, 1.8958) .. (7.3763, 1.8958).. controls (7.2815, 1.8958) and (7.2191, 1.9549) .. (7.2191, 2.0481) -- (7.2191, 2.173).. controls (7.2191, 2.2646) and (7.2831, 2.3238) .. (7.3763, 2.3238).. controls (7.4702, 2.3238) and (7.5335, 2.2661) .. (7.5335, 2.173) -- (7.5335, 2.0837);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (3.7491, 1.8442) -- (3.8265, 1.8442) -- (3.8265, 1.2812) -- (3.7491, 1.2812) -- cycle;
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (4.1666, 1.2812) -- (4.1666, 1.5504).. controls (4.1666, 1.5852) and (4.1586, 1.6278) .. (4.0939, 1.6278).. controls (4.0465, 1.6278) and (4.007, 1.597) .. (4.007, 1.552) -- (4.007, 1.2812) -- (3.9319, 1.2812) -- (3.9319, 1.695) -- (4.007, 1.695) -- (4.007, 1.672).. controls (4.0307, 1.6911) and (4.0655, 1.7013) .. (4.0939, 1.7013).. controls (4.1902, 1.7013) and (4.2408, 1.6444) .. (4.2408, 1.5504) -- (4.2408, 1.2812) -- (4.1666, 1.2812);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (4.5717, 1.5504).. controls (4.5717, 1.5852) and (4.5582, 1.6278) .. (4.4935, 1.6278).. controls (4.4438, 1.6278) and (4.4137, 1.5994) .. (4.4137, 1.5504) -- (4.4137, 1.4257).. controls (4.4137, 1.3902) and (4.4279, 1.3483) .. (4.4935, 1.3483).. controls (4.5425, 1.3483) and (4.5717, 1.3775) .. (4.5717, 1.4257) -- cycle(4.5717, 1.3064).. controls (4.5574, 1.2898) and (4.5258, 1.2732) .. (4.4935, 1.2732).. controls (4.3987, 1.2732) and (4.3386, 1.3324) .. (4.3386, 1.4257) -- (4.3386, 1.5504).. controls (4.3386, 1.6421) and (4.4003, 1.7013) .. (4.4935, 1.7013).. controls (4.5251, 1.7013) and (4.5582, 1.6855) .. (4.5717, 1.6697) -- (4.5717, 1.6958) -- (4.6475, 1.6958) -- (4.6475, 1.2503).. controls (4.6475, 1.135) and (4.5717, 1.1027) .. (4.4935, 1.1027).. controls (4.4215, 1.1027) and (4.3631, 1.1445) .. (4.3482, 1.2163) -- (4.4263, 1.2163).. controls (4.4382, 1.1903) and (4.4619, 1.173) .. (4.4935, 1.173).. controls (4.5297, 1.173) and (4.5717, 1.184) .. (4.5717, 1.2503) -- (4.5717, 1.3064);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (4.9863, 1.5504).. controls (4.9863, 1.5852) and (4.9696, 1.6278) .. (4.9049, 1.6278).. controls (4.8535, 1.6278) and (4.8227, 1.5994) .. (4.8227, 1.5504) -- (4.8227, 1.4257).. controls (4.8227, 1.3902) and (4.8393, 1.3483) .. (4.9049, 1.3483).. controls (4.9555, 1.3483) and (4.9863, 1.3775) .. (4.9863, 1.4257) -- cycle(4.9049, 1.2732).. controls (4.8102, 1.2732) and (4.7477, 1.3324) .. (4.7477, 1.4257) -- (4.7477, 1.5504).. controls (4.7477, 1.6421) and (4.8117, 1.7013) .. (4.9049, 1.7013).. controls (4.9989, 1.7013) and (5.062, 1.6436) .. (5.062, 1.5504) -- (5.062, 1.4257).. controls (5.062, 1.3341) and (4.9973, 1.2732) .. (4.9049, 1.2732);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (5.1609, 1.8442) -- (5.2359, 1.8442) -- (5.2359, 1.3894).. controls (5.2359, 1.3632) and (5.2508, 1.3554) .. (5.2683, 1.3554) -- (5.2959, 1.3554) -- (5.2959, 1.2812) -- (5.2643, 1.2812).. controls (5.2074, 1.2812) and (5.1609, 1.3128) .. (5.1609, 1.3925) -- (5.1609, 1.8442);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (5.512, 1.2747).. controls (5.4244, 1.2747) and (5.3612, 1.3278) .. (5.3565, 1.417) -- (5.4315, 1.417).. controls (5.4363, 1.372) and (5.4662, 1.3498) .. (5.512, 1.3498).. controls (5.5515, 1.3498) and (5.5942, 1.3594) .. (5.5942, 1.4075).. controls (5.5942, 1.4272) and (5.5777, 1.4415) .. (5.5539, 1.4486).. controls (5.52, 1.4597) and (5.4876, 1.466) .. (5.4544, 1.4746).. controls (5.4023, 1.4881) and (5.3628, 1.5228) .. (5.3628, 1.5773).. controls (5.3628, 1.6666) and (5.4323, 1.7005) .. (5.5096, 1.7005).. controls (5.5933, 1.7005) and (5.655, 1.6531) .. (5.6629, 1.5678) -- (5.5863, 1.5678).. controls (5.58, 1.6057) and (5.5547, 1.6271) .. (5.5081, 1.6271).. controls (5.4734, 1.6271) and (5.437, 1.6176) .. (5.437, 1.5773).. controls (5.437, 1.5614) and (5.4504, 1.5481) .. (5.4742, 1.5418).. controls (5.505, 1.533) and (5.5469, 1.5243) .. (5.58, 1.5134).. controls (5.6282, 1.4976) and (5.6684, 1.4636) .. (5.6684, 1.4075).. controls (5.6684, 1.3104) and (5.5957, 1.2747) .. (5.512, 1.2747);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (5.727, 1.695) -- (5.802, 1.695) -- (5.802, 1.8442) -- (5.8771, 1.8442) -- (5.8771, 1.695) -- (5.9632, 1.695) -- (5.9632, 1.6199) -- (5.8771, 1.6199) -- (5.8771, 1.3894).. controls (5.8771, 1.3632) and (5.892, 1.3554) .. (5.9094, 1.3554) -- (5.9647, 1.3554) -- (5.9647, 1.2812) -- (5.9062, 1.2812).. controls (5.8478, 1.2812) and (5.802, 1.3128) .. (5.802, 1.3925) -- (5.802, 1.6199) -- (5.727, 1.6199) -- (5.727, 1.695);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (6.275, 1.462) -- (6.1795, 1.462).. controls (6.1422, 1.462) and (6.1131, 1.4477) .. (6.1131, 1.4123).. controls (6.1131, 1.3608) and (6.1518, 1.3451) .. (6.1889, 1.3451).. controls (6.2315, 1.3451) and (6.275, 1.3768) .. (6.275, 1.4248) -- cycle(6.3508, 1.2812) -- (6.275, 1.2812) -- (6.275, 1.3128).. controls (6.2569, 1.2882) and (6.2173, 1.274) .. (6.1795, 1.274).. controls (6.1131, 1.274) and (6.0388, 1.3159) .. (6.0388, 1.4123).. controls (6.0388, 1.492) and (6.1004, 1.5338) .. (6.1786, 1.5338) -- (6.275, 1.5338) -- (6.275, 1.5623).. controls (6.275, 1.6136) and (6.2458, 1.6278) .. (6.2047, 1.6278).. controls (6.1691, 1.6278) and (6.1352, 1.612) .. (6.1288, 1.5678) -- (6.0538, 1.5678).. controls (6.0626, 1.6658) and (6.1431, 1.7013) .. (6.2039, 1.7013).. controls (6.2758, 1.7013) and (6.3508, 1.6666) .. (6.3508, 1.5646) -- (6.3508, 1.2812);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (6.5245, 1.4257).. controls (6.5245, 1.3775) and (6.5537, 1.3483) .. (6.6035, 1.3483).. controls (6.6691, 1.3483) and (6.6832, 1.3902) .. (6.6832, 1.4257) -- (6.6832, 1.5504).. controls (6.6832, 1.5994) and (6.6532, 1.6278) .. (6.6035, 1.6278).. controls (6.5387, 1.6278) and (6.5245, 1.5852) .. (6.5245, 1.5504) -- cycle(6.4487, 1.5504).. controls (6.4487, 1.6436) and (6.5095, 1.7013) .. (6.6035, 1.7013).. controls (6.6366, 1.7013) and (6.6698, 1.6847) .. (6.6832, 1.6674) -- (6.6832, 1.8442) -- (6.7591, 1.8442) -- (6.7591, 1.2812) -- (6.6832, 1.2812) -- (6.6832, 1.3064).. controls (6.6706, 1.2906) and (6.635, 1.2732) .. (6.6035, 1.2732).. controls (6.511, 1.2732) and (6.4487, 1.3341) .. (6.4487, 1.4257) -- (6.4487, 1.5504);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (6.8365, 1.695) -- (6.9115, 1.695) -- (6.9115, 1.8442) -- (6.9866, 1.8442) -- (6.9866, 1.695) -- (7.0726, 1.695) -- (7.0726, 1.6199) -- (6.9866, 1.6199) -- (6.9866, 1.3894).. controls (6.9866, 1.3632) and (7.0015, 1.3554) .. (7.0189, 1.3554) -- (7.0742, 1.3554) -- (7.0742, 1.2812) -- (7.0158, 1.2812).. controls (6.9573, 1.2812) and (6.9115, 1.3128) .. (6.9115, 1.3925) -- (6.9115, 1.6199) -- (6.8365, 1.6199) -- (6.8365, 1.695);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (4.0134, 4.1978).. controls (3.9487, 4.2151) and (3.8822, 4.1767) .. (3.8649, 4.1119).. controls (3.8475, 4.0472) and (3.8859, 3.9806) .. (3.9507, 3.9633).. controls (4.0154, 3.9459) and (4.082, 3.9844) .. (4.0993, 4.0491).. controls (4.1167, 4.1138) and (4.0782, 4.1804) .. (4.0134, 4.1978);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (3.6354, 3.9778) -- (3.1998, 3.9778) -- (3.2868, 4.3052).. controls (3.2968, 4.3418) and (3.275, 4.38) .. (3.2383, 4.3901) -- (3.1711, 4.4081).. controls (3.1342, 4.418) and (3.0969, 4.3962) .. (3.0867, 4.3593) -- (2.9853, 3.9778) -- (2.6446, 3.9778).. controls (2.6069, 3.9779) and (2.5669, 3.9455) .. (2.5566, 3.9078) -- (2.5383, 3.8392).. controls (2.5281, 3.8014) and (2.5503, 3.7706) .. (2.588, 3.7705) -- (2.9297, 3.7705) -- (2.8414, 3.4429).. controls (2.8315, 3.4064) and (2.8547, 3.3678) .. (2.8911, 3.3579) -- (2.9574, 3.3402).. controls (2.9938, 3.3303) and (3.0312, 3.3518) .. (3.0413, 3.3883) -- (3.1443, 3.7705) -- (3.6354, 3.7705).. controls (3.7025, 3.7705) and (3.7568, 3.7162) .. (3.7568, 3.6492).. controls (3.7568, 3.641) and (3.7545, 3.6273) .. (3.7535, 3.6216) -- (3.5932, 3.0273).. controls (3.5833, 2.9909) and (3.6065, 2.9523) .. (3.6429, 2.9425) -- (3.7092, 2.9247).. controls (3.7456, 2.9149) and (3.783, 2.9363) .. (3.793, 2.9727) -- (3.953, 3.5629) -- (3.9528, 3.5632).. controls (3.9603, 3.5906) and (3.9643, 3.6193) .. (3.9643, 3.6491).. controls (3.9643, 3.8307) and (3.817, 3.9778) .. (3.6354, 3.9778);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (0.1852, 2.422) -- (0.1852, 1.9032) -- (0.1419, 1.9032) -- (0.1419, 2.422) -- (0.0, 2.422) -- (0.0, 2.4654) -- (0.3272, 2.4654) -- (0.3272, 2.422) -- (0.1852, 2.422);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (0.5795, 2.1791).. controls (0.5795, 2.2264) and (0.5582, 2.2832) .. (0.4707, 2.2832).. controls (0.4029, 2.2832) and (0.3611, 2.2453) .. (0.3611, 2.1791) -- (0.3611, 2.1428) -- (0.5795, 2.1428) -- cycle(0.6228, 2.1003) -- (0.3611, 2.1003) -- (0.3611, 2.0428).. controls (0.3611, 1.9954) and (0.3824, 1.9379) .. (0.4707, 1.9379).. controls (0.5338, 1.9379) and (0.5748, 1.9718) .. (0.5787, 2.031) -- (0.6221, 2.031).. controls (0.6173, 1.9482) and (0.5575, 1.8953) .. (0.4707, 1.8953).. controls (0.3776, 1.8953) and (0.3177, 1.9513) .. (0.3177, 2.0428) -- (0.3177, 2.1791).. controls (0.3177, 2.2682) and (0.3792, 2.3258) .. (0.4707, 2.3258).. controls (0.563, 2.3258) and (0.6228, 2.2698) .. (0.6228, 2.1791) -- (0.6228, 2.1003);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (1.0211, 2.1878) -- (0.9785, 2.1878).. controls (0.9762, 2.2327) and (0.9525, 2.2832) .. (0.8697, 2.2832).. controls (0.8019, 2.2832) and (0.7601, 2.2453) .. (0.7601, 2.1791) -- (0.7601, 2.0428).. controls (0.7601, 1.9954) and (0.7814, 1.9379) .. (0.8697, 1.9379).. controls (0.9328, 1.9379) and (0.9738, 1.9718) .. (0.9777, 2.031) -- (1.0211, 2.031).. controls (1.0164, 1.9482) and (0.9565, 1.8953) .. (0.8697, 1.8953).. controls (0.7767, 1.8953) and (0.7168, 1.9513) .. (0.7168, 2.0428) -- (0.7168, 2.1791).. controls (0.7168, 2.2682) and (0.7782, 2.3258) .. (0.8697, 2.3258).. controls (0.9588, 2.3258) and (1.0172, 2.2738) .. (1.0211, 2.1878);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (1.3705, 1.9032) -- (1.3705, 2.1791).. controls (1.3705, 2.2257) and (1.3602, 2.2832) .. (1.272, 2.2832).. controls (1.2081, 2.2832) and (1.1568, 2.2414) .. (1.1568, 2.1808) -- (1.1568, 1.9032) -- (1.1134, 1.9032) -- (1.1134, 2.4645) -- (1.1568, 2.4645) -- (1.1568, 2.269).. controls (1.1829, 2.31) and (1.2301, 2.3258) .. (1.272, 2.3258).. controls (1.3642, 2.3258) and (1.4139, 2.2705) .. (1.4139, 2.1791) -- (1.4139, 1.9032) -- (1.3705, 1.9032);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (1.779, 1.9032) -- (1.779, 2.1791).. controls (1.779, 2.2257) and (1.7688, 2.2832) .. (1.6805, 2.2832).. controls (1.6167, 2.2832) and (1.5654, 2.2414) .. (1.5654, 2.1808) -- (1.5654, 1.9032) -- (1.5221, 1.9032) -- (1.5221, 2.3179) -- (1.5654, 2.3179) -- (1.5654, 2.269).. controls (1.5938, 2.3116) and (1.6379, 2.3258) .. (1.6805, 2.3258).. controls (1.7727, 2.3258) and (1.8224, 2.2705) .. (1.8224, 2.1791) -- (1.8224, 1.9032) -- (1.779, 1.9032);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (1.9334, 1.9032) -- (1.9334, 2.3187) -- (1.9767, 2.3187) -- (1.9767, 1.9032) -- cycle(1.9255, 2.4015) -- (1.9255, 2.4717) -- (1.9822, 2.4717) -- (1.9822, 2.4015) -- (1.9255, 2.4015);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (2.2216, 1.8968).. controls (2.134, 1.8968) and (2.071, 1.945) .. (2.071, 2.0262) -- (2.1143, 2.0262).. controls (2.1143, 1.9694) and (2.1569, 1.9394) .. (2.2216, 1.9394).. controls (2.2751, 1.9394) and (2.3311, 1.9537) .. (2.3311, 2.023).. controls (2.3311, 2.0569) and (2.3076, 2.0735) .. (2.2751, 2.083).. controls (2.2405, 2.0932) and (2.1964, 2.1019) .. (2.1656, 2.109).. controls (2.1167, 2.12) and (2.0773, 2.1571) .. (2.0773, 2.2083).. controls (2.0773, 2.2911) and (2.1443, 2.325) .. (2.2192, 2.325).. controls (2.3067, 2.325) and (2.3682, 2.2792) .. (2.3689, 2.1973) -- (2.3256, 2.1973).. controls (2.3248, 2.2509) and (2.2894, 2.2824) .. (2.2176, 2.2824).. controls (2.1703, 2.2824) and (2.1206, 2.2682) .. (2.1206, 2.2083).. controls (2.1206, 2.1808) and (2.1435, 2.1578) .. (2.1766, 2.1499).. controls (2.2042, 2.1436) and (2.2538, 2.1342) .. (2.2894, 2.124).. controls (2.3383, 2.1097) and (2.3745, 2.0758) .. (2.3745, 2.023).. controls (2.3745, 1.9307) and (2.3035, 1.8968) .. (2.2216, 1.8968);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (2.7674, 2.1878) -- (2.7247, 2.1878).. controls (2.7224, 2.2327) and (2.6987, 2.2832) .. (2.616, 2.2832).. controls (2.5481, 2.2832) and (2.5063, 2.2453) .. (2.5063, 2.1791) -- (2.5063, 2.0428).. controls (2.5063, 1.9954) and (2.5276, 1.9379) .. (2.616, 1.9379).. controls (2.679, 1.9379) and (2.72, 1.9718) .. (2.724, 2.031) -- (2.7674, 2.031).. controls (2.7626, 1.9482) and (2.7027, 1.8953) .. (2.616, 1.8953).. controls (2.5229, 1.8953) and (2.463, 1.9513) .. (2.463, 2.0428) -- (2.463, 2.1791).. controls (2.463, 2.2682) and (2.5245, 2.3258) .. (2.616, 2.3258).. controls (2.705, 2.3258) and (2.7633, 2.2738) .. (2.7674, 2.1878);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (3.1167, 1.9032) -- (3.1167, 2.1791).. controls (3.1167, 2.2257) and (3.1064, 2.2832) .. (3.0181, 2.2832).. controls (2.9542, 2.2832) and (2.903, 2.2414) .. (2.903, 2.1808) -- (2.903, 1.9032) -- (2.8596, 1.9032) -- (2.8596, 2.4645) -- (2.903, 2.4645) -- (2.903, 2.269).. controls (2.929, 2.31) and (2.9764, 2.3258) .. (3.0181, 2.3258).. controls (3.1103, 2.3258) and (3.16, 2.2705) .. (3.16, 2.1791) -- (3.16, 1.9032) -- (3.1167, 1.9032);
+
+  \path[fill=THIblau,nonzero rule,shift={(0,5.8804839147822925)},scale=1.3333] (3.5219, 2.1791).. controls (3.5219, 2.2264) and (3.5007, 2.2832) .. (3.4131, 2.2832).. controls (3.3453, 2.2832) and (3.3036, 2.2453) .. (3.3036, 2.1791) -- (3.3036, 2.1428) -- (3.5219, 2.1428) -- cycle(3.5653, 2.1003) -- (3.3036, 2.1003) -- (3.3036, 2.0428).. controls (3.3036, 1.9954) and (3.3249, 1.9379) .. (3.4131, 1.9379).. controls (3.4762, 1.9379) and (3.5172, 1.9718) .. (3.5211, 2.031) -- (3.5645, 2.031).. controls (3.5598, 1.9482) and (3.4998, 1.8953) .. (3.4131, 1.8953).. controls (3.3201, 1.8953) and (3.2602, 1.9513) .. (3.2602, 2.0428) -- (3.2602, 2.1791).. controls (3.2602, 2.2682) and (3.3217, 2.3258) .. (3.4131, 2.3258).. controls (3.5054, 2.3258) and (3.5653, 2.2698) .. (3.5653, 2.1791) -- (3.5653, 2.1003);
+\end{tikzpicture}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% Set all beamer elements to the new colors
+\setbeamercolor{palette primary}{bg=THIblau,fg=white}
+\setbeamercolor{palette secondary}{bg=THIblau,fg=white}
+\setbeamercolor{structure}{fg=THIblau}
+% TODO: Print Modus with black and white / monochrome
+% TODO: This mode simplifies Title Page
+% TODO: Add comments about what node does what
+
+
+% Make frame title italic
+\setbeamerfont{frametitle}{series=\itshape}
+\setbeamerfont{framesubtitle}{series=\itshape}
+
+\providecommand{\GeneralZeroBackground}{
+ \begin{scope}
+  % Generic Background without any images
+  % TODO: Add some small overlap beyond the paper?
+
+  % Cut any overlap over the edges
+  \clip (0,0) rectangle (\paperwidth, \paperheight);
+  % Rotated rectangle with two blue colors shading
+  \draw[white,very thin, top color=THIblau, bottom color=THIblau!50!THIiaw, shading angle=90-10, rotate around={-10:(0.65*\paperwidth, 0.65*\paperheight)}] (0.65*\paperwidth, 0.65*\paperheight) rectangle (-0.05*\paperwidth, -0.2*\paperheight);
+  % The logo in the top aligned to the square
+  \node[anchor=east,inner sep=0pt,outer sep=0pt,scale=0.26/10cm*\paperwidth] (logo) at (0.95*\paperwidth, 0.675*\paperheight) {\usebox\THILogoWithText};
+  % Title graphic in the bottom right corner
+  \node[anchor=south east, inner sep=0pt, outer sep=0pt] (titlegraphic) at (0.95*\paperwidth, 0.1*\paperheight) {\usebeamertemplate{titlegraphic}};
+ \end{scope}
+}
+
+% Patching the maketitle command to ensure it is always plain format
+\patchcmd{\maketitle}%
+    {\ifbeamer@inframe\titlepage\else\frame{\titlepage}\fi}%
+    {\ifbeamer@inframe\titlepage\else\frame[plain]{\titlepage}\fi}%
+    {}{\errmessage{failed to patch maketitle command}}%
+
+% Patching the maketitle command to ensure it is in plain format when used outside a frame
+\patchcmd{\titlepage}%
+    {\usebeamertemplate*{title page}}%
+    {\ifbeamer@inframe\usebeamertemplate*{title page}\else\frame[plain]{\usebeamertemplate*{title page}}\fi}%
+    {}{\errmessage{failed to patch titlepage command}}%
+
+\setbeamertemplate{title page}{%
+% TODO: This needs two compilations to be in place - why?
+\begin{tikzpicture}[overlay, remember picture, shift={(current page.south west)}]
+ \GeneralZeroBackground
+
+  % Text Nodes on the pages
+     \node[anchor=south west, white, text width=0.54*\paperwidth] (author) at (0.05*\paperwidth, 0.05*\paperwidth) {\fontsize{10}{12}\selectfont\bfseries\insertauthor};
+    \node[anchor=west, white, text width=0.54*\paperwidth, above=0.08*\paperheight of author] (date) {\fontsize{10}{12}\selectfont\itshape\insertdate\vphantom{Hg}};
+      \node[anchor=west, white, text width=0.54*\paperwidth, above=1.2em of date, align=flush left] (subtitle) {\fontsize{12}{14}\selectfont\itshape\insertsubtitle};
+      \node[anchor=west, white, text width=0.54*\paperwidth, above=0.75em of subtitle, align=flush left] (title) {\fontsize{17.28}{22}\selectfont\itshape\inserttitle\vphantom{Hg}};
+      % node distance=0.125*\paperheight
+\end{tikzpicture}%
+%
+%  \vbox{}
+%  \vfill
+%  \begingroup
+%    \centering
+%    \usebeamertemplate{title}
+%    \vskip0.5em
+%    \includegraphics[width=4cm]{THI-info.pdf}
+%    %\usebeamertemplate{titlegraphic}
+%    \vskip1em
+%    \usebeamertemplate{author}
+%    \usebeamertemplate{institute}
+%    \usebeamertemplate{date}
+%  \endgroup
+%  \vfill
+}
+
+% Patching the part command
+\let\origpart\part
+\newcommand{\parttitle}{}
+\renewcommand*{\part}[2][]{%
+	% Reset section numbering for each part
+	% https://tex.stackexchange.com/a/65661
+	% TODO: This should not use \AtBeginPart
+	%\makeatletter
+	%\AtBeginPart{
+	  \beamer@tocsectionnumber=0\relax
+	  \setcounter{section}{0}
+	%}
+	%\makeatother
+
+	% Store the part title in \parttitle
+	% In contrast to \insertpart this does not include a hyperlink to the part
+	% https://tex.stackexchange.com/a/13392
+   \ifx\\#1\\% optional argument not present?
+      \renewcommand*\parttitle{#2}%
+   \else
+      \renewcommand*\parttitle{#1}%
+   \fi
+
+   % Calling the original part command
+   \ifx\\#1\\% optional argument not present?
+      \origpart{#2}%
+   \else
+      \origpart[#1]{#2}%
+   \fi
+}
+
+% Patch the partpage command to ensure it is in plain format when used outside a frame
+\patchcmd{\partpage}%
+    {\usebeamertemplate*{part page}}%
+    {\ifbeamer@inframe\usebeamertemplate*{part page}\else\frame[plain]{\usebeamertemplate*{part page}}\fi}%
+    {}{\errmessage{failed to patch partpage command}}%
+
+
+% Partpages - showing a modified version of the title screen again
+\setbeamertemplate{part page}{%
+\begin{tikzpicture}[overlay, remember picture, shift={(current page.south west)}]
+ \GeneralZeroBackground
+
+  % Text Nodes on the pages
+     \node[anchor=south west, white, text width=0.54*\paperwidth] (author) at (0.05*\paperwidth, 0.05*\paperwidth) {\fontsize{10}{12}\selectfont\bfseries\insertauthor};
+    \node[anchor=west, white, text width=0.54*\paperwidth, above=0.08*\paperheight of author] (date) {\fontsize{10}{12}\selectfont\itshape\insertdate\vphantom{Hg}};
+      \node[anchor=west, white, text width=0.54*\paperwidth, above=1.2em of date, align=flush left] (subtitle) {\fontsize{12}{14}\selectfont\itshape\inserttitle};
+      \node[anchor=west, white, text width=0.54*\paperwidth, above=0.75em of subtitle, align=flush left] (title) {\fontsize{17.28}{22}\selectfont\itshape\insertpartnumber.~\insertpart\vphantom{Hg}};
+      % node distance=0.125*\paperheight
+ \end{tikzpicture}%
+}
+
+
+% Section Pages showing TOC for this part
+\setbeamertemplate{section page}{%
+  % TODO: There should be a switch to remove the hideallsubsections
+  \frametitle{Overview: \insertpartnumber.~\parttitle}
+  \ifnum\value{section}<2
+  \tableofcontents[hideallsubsections]
+  \else
+  \tableofcontents[currentsection,hideallsubsections]
+  \fi
+}
+
+% Make sections numbered in TOC
+\setbeamertemplate{section in toc}[sections numbered]
+%\makeatletter
+\setbeamertemplate{section in toc}{\insertpartnumber.\inserttocsectionnumber.~\inserttocsection\par}
+%\makeatother
+
+
+\setbeamertemplate{background}{%
+% Skip background completely for plain frames
+\ifbeamer@plainframe\else
+   \begin{tikzpicture}[overlay, remember picture, yscale=-1]
+      % \draw[fill=blue!50] (0,0) rectangle (\paperwidth, \paperheight);
+      % Logo in the top right corner
+      \node[anchor=north east,inner sep=0pt,outer sep=0pt,scale=0.8em/370cm*\paperwidth] (logo) at (.985*\paperwidth,0.015\paperwidth) {\usebox\THILogo};
+      % Page number in the top right corner
+      \node[anchor=north east,inner sep=0pt,outer sep=0pt] (pagenumber) at (.985*\paperwidth,0.005*\paperwidth+5.02em-0.94cm) {\color{gray}\scriptsize\insertframenumber};
+  % TODO: Page number should align properly on 10pt, 11pt and 12pt
+
+   % Stripe on the left side - beginning adjustst for 10pt and 12pt
+  \begin{scope}[yshift=5.1em]
+   \filldraw[THIfaculty] (0,0) -- (0.27cm-0.22cm,0) arc[radius=0.22cm,start angle=-90,end angle=0] -- (0.27cm,\textheight-5.1em-0.35cm) arc[radius=0.06cm,start angle=0,end angle=90] -- (0,\textheight-5.1em-0.35cm+0.06cm) -- cycle;
+  \end{scope}
+
+   \end{tikzpicture}
+\fi%
+}%

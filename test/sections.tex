@@ -1,0 +1,50 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Normally this line should be:
+% \usetheme{esplanade}
+% this is a small hack for switching to the parent directory
+\usepackage{../beamerthemeesplanade}
+
+\author{Prof. Dr. Author}
+\title{Your Title}
+\subtitle{Your Subtitle}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Frame Title}
+Just some content
+\end{frame}
+
+\part{Introduction}
+\frame{\partpage}
+
+\section{Aaa}
+\frame{\sectionpage}
+\frame{Foo}
+
+\section{Bbb}
+\frame{\sectionpage}
+\frame{Bar}
+
+\section{Ccc}
+\frame{\sectionpage}
+\frame{Baz}
+
+\part{Another Part}
+\frame{\partpage}
+
+\section{xxX}
+\frame{\sectionpage}
+\frame{We are in section \thepart.\thesection}
+
+\section{yyY}
+\frame{\sectionpage}
+\frame{Foo}
+
+\section{zzZ}
+\frame{\sectionpage}
+\frame{Baz}
+
+\end{document}
